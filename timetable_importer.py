@@ -132,6 +132,10 @@ def export(source):
 
             allEvents += [thisEvent]
 
+    allEvents[2]['event']['type'] = "Tutorial"
+    allEvents[4]['event']['type'] = "Lecture"
+    allEvents[7]['event']['type'] = "Lecture"
+    allEvents[11]['event']['type'] = "Lecture"
 
     allEvents += [{
         'location': "Civil Eng. 102",
@@ -198,7 +202,7 @@ for hour in times:
             evStr += " <" + events_now[0]['event']['type'][:3] + ">"
             #evStr += events_now[0]['location']
         else:
-            evStr += '--------'
+            evStr += '[     :)     ]'
         evStr += evEnd
         ev += [evStr]
     allEv += [ev]
