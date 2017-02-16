@@ -132,6 +132,29 @@ def export(source):
 
             allEvents += [thisEvent]
 
+
+    allEvents += [{
+        'location': "Civil Eng. 102",
+        'day': 0,
+        'time_start':13,
+        'time_end':14,
+        'event':  {
+            'course': 'COMP3231',
+            'type': 'Tutoring'
+            }
+        }]
+
+    allEvents += [{
+        'location': "Civil Eng. 102",
+        'day': 1,
+        'time_start':14,
+        'time_end':15,
+        'event':  {
+            'course': 'COMP3231',
+            'type': 'Tutoring'
+            }
+        }]
+
     pp = pprint.PrettyPrinter(indent=4)
     #print pp.pprint(allEvents)
     return allEvents
@@ -145,7 +168,7 @@ allEvents = export(f.read())
 current_hour = int(time.strftime("%H"))
 current_day = datetime.today().weekday()
 
-times = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+times = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 days = [0, 1, 2, 3, 4]
 allEv = []
 for hour in times:
@@ -172,6 +195,7 @@ for hour in times:
         evStr = evStart
         if(len(events_now)>0):
             evStr += events_now[0]['event']['course']
+            evStr += " <" + events_now[0]['event']['type'][:3] + ">"
             #evStr += events_now[0]['location']
         else:
             evStr += '--------'
@@ -192,14 +216,15 @@ if len(currentEvent) > 0:
     e = currentEvent[0]
     hour = e['time_start']
     prettyHour = (str(hour)+":00") if hour <= 12 else (str(hour-12)+":00")
-    print "NOW: " + prettyHour + ' - ' + e['event']['course'] + ' at ' + e['location'] + " (" + str(e['time_end']-e['time_start']) + " hour " + e['event']['type'] + ")"
+    print "NOW:\n  " + prettyHour + ' - ' + e['event']['course'] + ' at ' + e['location'] + " (" + str(e['time_end']-e['time_start']) + " hour " + e['event']['type'] + ")"
 
 goodEvents = [event for event in allEvents if
         event['day'] == current_day and event['time_start'] > current_hour]
 
 goodEvents = sorted(goodEvents,key=lambda e:e['time_start'])
 
-print "COMING UP..."
+if len(goodEvents) > 0:
+    print "COMING UP:"
 
 for e in goodEvents:
     hour = e['time_start']
