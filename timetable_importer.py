@@ -60,8 +60,6 @@ def export(source):
     courses = [x.contents[0] for x in s.findAll('td',
                {'class': 'sectionHeading'})]
 
-    print 'Parsing calendar to make events'
-
     allEvents = []
 
     for course in courses:
@@ -135,11 +133,12 @@ def export(source):
             allEvents += [thisEvent]
 
     pp = pprint.PrettyPrinter(indent=4)
-    print pp.pprint(allEvents)
+    #print pp.pprint(allEvents)
     return allEvents
 
 
 from tabulate import tabulate
+import time
 f = open("timetable.htm")
 allEvents = export(f.read())
 
@@ -147,16 +146,31 @@ times = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 days = [0, 1, 2, 3, 4]
 allEv = []
 for hour in times:
-    ev = []
+    prettyHour = (str(hour)+":00") if hour <= 12 else (str(hour-12)+":00")
+    current_hour = int(time.strftime("%H"))
+    current_day = datetime.today().weekday()
+    if hour == current_hour:
+        prettyHour = "\033[1;31m" + prettyHour +"\033[0;0m"
+    ev = [prettyHour]
     for day in days:
         events_now = []
         for event in allEvents:
             if hour >= event['time_start'] and hour < event['time_end'] and event['day'] == day:
                 events_now += [event]
+        evStart = ""
+        evEnd = ""
+        if day == current_day and current_hour == hour:
+            evStart = "\033[1;31m"
+            evEnd = "\033[0;0m"
+        evStr = evStart
         if(len(events_now)>0):
-            ev += [events_now[0]['event']['course']]
+            evStr += events_now[0]['event']['course']
         else:
-            ev += ['Nothing']
+            evStr += 'Nothing'
+        evStr += evEnd
+        ev += [evStr]
     allEv += [ev]
 
-print tabulate(allEv, tablefmt="fancy_grid")
+header_days=["TIME", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
+
+print tabulate(allEv, headers=header_days, tablefmt="fancy_grid")
