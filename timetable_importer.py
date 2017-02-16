@@ -86,6 +86,8 @@ def export(source):
 
             if t.strip() != ' ':
                 ctype = t
+                if(ctype[0] == '&'):
+                    ctype = allEvents[-1]['event']['type']
 
             t = g.next()
             if t.strip() not in days:
@@ -132,11 +134,6 @@ def export(source):
 
             allEvents += [thisEvent]
 
-    allEvents[2]['event']['type'] = "Tutorial"
-    allEvents[4]['event']['type'] = "Lecture"
-    allEvents[7]['event']['type'] = "Lecture"
-    allEvents[11]['event']['type'] = "Lecture"
-
     allEvents += [{
         'location': "Civil Eng. 102",
         'day': 0,
@@ -166,7 +163,7 @@ def export(source):
 
 from tabulate import tabulate
 import time
-f = open("timetable.htm")
+f = open("/home/seb/dev/timetable_tools/timetable.htm")
 allEvents = export(f.read())
 
 current_hour = int(time.strftime("%H"))
