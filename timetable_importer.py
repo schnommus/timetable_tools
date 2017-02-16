@@ -142,13 +142,14 @@ import time
 f = open("timetable.htm")
 allEvents = export(f.read())
 
+current_hour = int(time.strftime("%H"))
+current_day = datetime.today().weekday()
+
 times = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 days = [0, 1, 2, 3, 4]
 allEv = []
 for hour in times:
     prettyHour = (str(hour)+":00") if hour <= 12 else (str(hour-12)+":00")
-    current_hour = int(time.strftime("%H"))
-    current_day = datetime.today().weekday()
     if hour == current_hour:
         prettyHour = "\033[1;31m" + prettyHour +"\033[0;0m"
     ev = [prettyHour]
@@ -159,18 +160,48 @@ for hour in times:
                 events_now += [event]
         evStart = ""
         evEnd = ""
+        if current_hour == hour:
+            evStart = "\033[1;34m"
+            evEnd = "\033[0;0m"
+        if current_day == day:
+            evStart = "\033[1;34m"
+            evEnd = "\033[0;0m"
         if day == current_day and current_hour == hour:
             evStart = "\033[1;31m"
             evEnd = "\033[0;0m"
         evStr = evStart
         if(len(events_now)>0):
             evStr += events_now[0]['event']['course']
+            #evStr += events_now[0]['location']
         else:
-            evStr += 'Nothing'
+            evStr += '--------'
         evStr += evEnd
         ev += [evStr]
     allEv += [ev]
 
 header_days=["TIME", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
+header_days[current_day+1] = "\033[1;31m" + header_days[current_day+1] + "\033[0;0m"
 
 print tabulate(allEv, headers=header_days, tablefmt="fancy_grid")
+
+currentEvent = [event for event in allEvents if
+        event['day'] == current_day and current_hour >= event['time_start']
+        and current_hour < event['time_end']]
+
+if len(currentEvent) > 0:
+    e = currentEvent[0]
+    hour = e['time_start']
+    prettyHour = (str(hour)+":00") if hour <= 12 else (str(hour-12)+":00")
+    print "NOW: " + prettyHour + ' - ' + e['event']['course'] + ' at ' + e['location'] + " (" + str(e['time_end']-e['time_start']) + " hour " + e['event']['type'] + ")"
+
+goodEvents = [event for event in allEvents if
+        event['day'] == current_day and event['time_start'] > current_hour]
+
+goodEvents = sorted(goodEvents,key=lambda e:e['time_start'])
+
+print "COMING UP..."
+
+for e in goodEvents:
+    hour = e['time_start']
+    prettyHour = (str(hour)+":00") if hour <= 12 else (str(hour-12)+":00")
+    print "  " + prettyHour + ' - ' + e['event']['course'] + ' at ' + e['location'] + " (" + str(e['time_end']-e['time_start']) + " hour " + e['event']['type'] + ")"
