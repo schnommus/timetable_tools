@@ -134,27 +134,27 @@ def export(source):
 
             allEvents += [thisEvent]
 
-    allEvents += [{
-        'location': "Civil Eng. 102",
-        'day': 0,
-        'time_start':13,
-        'time_end':14,
-        'event':  {
-            'course': 'COMP3231',
-            'type': 'Tutoring'
-            }
-        }]
+    #   allEvents += [{
+    #       'location': "Civil Eng. 102",
+    #       'day': 0,
+    #       'time_start':13,
+    #       'time_end':14,
+    #       'event':  {
+    #           'course': 'COMP3231',
+    #           'type': 'Tutoring'
+    #           }
+    #       }]
 
-    allEvents += [{
-        'location': "Civil Eng. 102",
-        'day': 1,
-        'time_start':14,
-        'time_end':15,
-        'event':  {
-            'course': 'COMP3231',
-            'type': 'Tutoring'
-            }
-        }]
+    #   allEvents += [{
+    #       'location': "Civil Eng. 102",
+    #       'day': 1,
+    #       'time_start':14,
+    #       'time_end':15,
+    #       'event':  {
+    #           'course': 'COMP3231',
+    #           'type': 'Tutoring'
+    #           }
+    #       }]
 
     pp = pprint.PrettyPrinter(indent=4)
     #print pp.pprint(allEvents)
