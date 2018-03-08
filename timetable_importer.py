@@ -134,6 +134,7 @@ def export(source):
 
             allEvents += [thisEvent]
 
+
     #   allEvents += [{
     #       'location': "Civil Eng. 102",
     #       'day': 0,
@@ -168,6 +169,9 @@ allEvents = export(f.read())
 
 current_hour = int(time.strftime("%H"))
 current_day = datetime.today().weekday()
+
+if current_day > 4:
+    current_day = 0
 
 times = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 days = [0, 1, 2, 3, 4]
